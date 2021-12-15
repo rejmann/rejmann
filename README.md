@@ -18,8 +18,8 @@ Olá, sou Rejman, desenvolvedor Full Stack 🚀do Brasil, atualmente Freelancer 
 - 🌱 Atualmente estou aprendendo Docker; 
 - 💬 Pergunte-me sobre qualquer coisa, fico feliz em ajudar;
 
-**Linguagens e ferramentas:**  
-<span style="display: inline_block"><br>
+**Linguagens e ferramentas:** 
+<div style="display: inline_block;">
   <img align="center" alt="Rejman-PHP" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/php/php-original.svg">
   <img align="center" alt="Rejman-Laravel" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/laravel/laravel-plain.svg">
   <img align="center" alt="Rejman-Composer" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/composer/composer-original.svg">
@@ -32,7 +32,7 @@ Olá, sou Rejman, desenvolvedor Full Stack 🚀do Brasil, atualmente Freelancer 
   <img align="center" alt="Rejman-Linux" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg">
   &nbsp;
   <a href="https://github.com/antonkomarev/github-profile-views-counter"><img src="https://komarev.com/ghpvc/?username=rejmann"></a>
-</span>
+</div>
 
 ## 
 
