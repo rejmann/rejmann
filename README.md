@@ -15,7 +15,7 @@ Olá, sou Rejman, desenvolvedor Full Stack 🚀do Brasil, atualmente Freelancer 
 **Sobre mim:**
 
 - 👨🏽‍💻 Atualmente graduando em Analise e Desenvolvimento de Sistemas;
-- 🌱 Atualmente estou aprendendo Laravel, Docker e Tailwind; 
+- 🌱 Atualmente estou aprendendo Docker e Tailwind; 
 - 💬 Pergunte-me sobre qualquer coisa, fico feliz em ajudar;
 
 **Linguagens e ferramentas:** 
