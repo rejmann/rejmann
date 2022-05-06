@@ -23,6 +23,7 @@ Olá, sou Rejman, desenvolvedor Full Stack 🚀do Brasil, atualmente Freelancer 
   <img align="center" alt="Rejman-Laravel" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/laravel/laravel-plain.svg">
   <img align="center" alt="Rejman-Symfony" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/symfony/symfony-original.svg">
   <img align="center" alt="Rejman-Composer" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/composer/composer-original.svg">
+  
   <img align="center" alt="Rejman-MySql" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original.svg">
   <img align="center" alt="Rejman-JQuery" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/jquery/jquery-original.svg">
   <img align="center" alt="Rejman-Linux" height="25" width="35" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg">
@@ -34,8 +35,8 @@ Olá, sou Rejman, desenvolvedor Full Stack 🚀do Brasil, atualmente Freelancer 
 
 <div align="center">
   <a href="https://github.com/rejmann">
-  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=rejmann&show_icons=true&theme=github_dark&include_all_commits=true&count_private=true"/>
-  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=rejmann&layout=compact&langs_count=7&theme=github_dark"/>
+  <img height="165em" src="https://github-readme-stats.vercel.app/api?username=rejmann&show_icons=true&theme=github_dark&include_all_commits=true&count_private=true"/>
+  <img height="165em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=rejmann&layout=compact&langs_count=7&theme=github_dark"/>
 </div>
   
   ##
