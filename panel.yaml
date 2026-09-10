@@ -21,6 +21,7 @@
 # reescrito por `make stats`. O pontilhado replica o justify_format do today.py.
 
 header: "rejman@root"     # título antes da régua tracejada
+birthday: "1998-08-21"          # YYYY-MM-DD; o today.py calcula a linha "Uptime" a partir daqui
 width: 60                       # largura mínima (em colunas) do alinhamento;
                                 # se algum value passar disso, o painel e o
                                 # canvas dos SVGs crescem sozinhos pra caber

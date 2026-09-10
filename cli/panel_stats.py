@@ -22,6 +22,21 @@ WRITABLE_FIELDS = (
 )
 
 
+def get_birthday(path=PANEL_YAML):
+    """Read the hand-set `birthday:` (YYYY-MM-DD) and return it as a datetime."""
+    import datetime
+    import yaml
+    with open(path, encoding='utf-8') as f:
+        raw = yaml.safe_load(f).get('birthday')
+    if isinstance(raw, datetime.datetime):
+        return raw
+    if isinstance(raw, datetime.date):          # YAML parses 1998-07-05 as a date
+        return datetime.datetime(raw.year, raw.month, raw.day)
+    if isinstance(raw, str) and raw.strip():
+        return datetime.datetime.strptime(raw.strip(), '%Y-%m-%d')
+    raise SystemExit(f'error: `birthday` (YYYY-MM-DD) missing from {path}')
+
+
 def as_text(value):
     return f'{value:,}' if isinstance(value, int) else str(value)
 
