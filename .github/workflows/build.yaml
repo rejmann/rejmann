@@ -4,7 +4,8 @@ on:
     branches:
       - main
   schedule:
-    - cron: "0 4 * * *"
+    # 06:00 UTC = 03:00 America/Sao_Paulo (Brasil não tem horário de verão desde 2019)
+    - cron: "0 6 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
