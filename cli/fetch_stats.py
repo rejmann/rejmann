@@ -21,17 +21,18 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 
-from panel_stats import render, set_values  # noqa: E402
+from panel_stats import get_birthday, render, set_values  # noqa: E402
 
 ARCHIVE_OWNER = {'id': 'MDQ6VXNlcjU3MzMxMTM0'}
 
 
 def collect_stats():
-    """Return {field_id: number}, mirroring the sequence in today.py's main."""
+    """Return {field_id: value}, mirroring the sequence in today.py's main."""
     os.chdir(ROOT)                 # cache/ lookups in today.py are CWD-relative
     sys.path.insert(0, ROOT)
     import today                   # deps + env only needed for the actual fetch
 
+    age_data = today.daily_readme(get_birthday())
     login = os.environ['USER_NAME']
     today.OWNER_ID = today.user_getter(login)[0]   # loc_counter_one_repo reads this global
 
@@ -50,6 +51,7 @@ def collect_stats():
         commit_data += int(archived[-2])
 
     return {
+        'age_data': age_data,
         'repo_data': repo_data,
         'contrib_data': contrib_data,
         'star_data': star_data,
