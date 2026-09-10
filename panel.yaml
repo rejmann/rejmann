@@ -1,0 +1,62 @@
+# ── Painel compartilhado dos SVGs de perfil ──────────────────────────────────
+# Fonte da verdade dos dois temas (dark_mode.svg e light_mode.svg). Preencha e
+# rode `make panel` (ou `make svg`, que também regenera a arte ASCII).
+#
+# Os campos vindos do GitHub — o `value:` de cada item em `fields:` e o da linha
+# "Uptime" — são reescritos automaticamente por `make stats` (e pelo today.py no
+# CI), que busca os números, grava aqui e regenera os SVGs.
+#
+#   key    -> rótulo; use ponto para subníveis: "Languages.Programming"
+#   value  -> texto exibido; o pontilhado é calculado para alinhar a coluna
+#   id     -> (opcional) liga o campo aos hooks do today.py; o value serve de
+#             ponto de partida e é reescrito por `make stats`
+#   spacer -> linha em branco dentro da seção
+#   raw    -> conteúdo SVG cru da linha (escape hatch; raramente necessário)
+#
+# Seção com `fields:` (GitHub Stats) — as linhas viram templates de texto:
+#   {k:Texto}       -> rótulo colorido
+#   {Rótulo:campo}  -> rótulo + pontilhado + valor (campo definido em `fields`)
+#   {campo}         -> só o valor (com pontilhado se o campo tiver `dots: true`)
+# Ajuste rótulos/ordem/separadores nas `rows`; o `value:` de cada campo é
+# reescrito por `make stats`. O pontilhado replica o justify_format do today.py.
+
+header: "rejman@root"     # título antes da régua tracejada
+birthday: "1998-08-21"          # YYYY-MM-DD; o today.py calcula a linha "Uptime" a partir daqui
+width: 60                       # largura mínima (em colunas) do alinhamento;
+                                # se algum value passar disso, o painel e o
+                                # canvas dos SVGs crescem sozinhos pra caber
+
+sections:
+  - title: null                 # a primeira seção não tem cabeçalho
+    rows:
+      - { key: "OS",     value: "Windows 11, Android 16, Linux" }
+      - { key: "Uptime", value: "28 years", id: age_data }
+      - { key: "Host",   value: "Codarme Sistemas, Ltda" }
+      - { key: "Kernel", value: "Developer" }
+      - { key: "IDE",    value: "VSCode" }
+      - spacer
+      - { key: "Languages.Programming", value: "PHP, Typescript, Go" }
+      - { key: "Languages.Computer",    value: "HTML, CSS, JSON, YAML" }
+      - { key: "Languages.Real",        value: "Portuguese (native), English (learning)" }
+      - spacer
+      - { key: "Hobbies.Software", value: "Valorant" }
+
+  - title: "Contact"
+    rows:
+      - { key: "Email.Personal", value: "rejman.dev@gmail.com" }
+      - { key: "LinkedIn",       value: "nascimentorejman" }
+
+  - title: "GitHub Stats"
+    fields:                       # contrato com o today.py — mexa só se ele mudar
+      repo_data:     { value: "95",      length: 6,  dots: true }
+      contrib_data:  { value: "133" }
+      star_data:     { value: "342",     length: 14, dots: true }
+      commit_data:   { value: "2,116",   length: 22, dots: true }
+      follower_data: { value: "196",     length: 10, dots: true }
+      loc_data:      { value: "446,276", length: 9,  dots: true }
+      loc_add:       { value: "523,178", class: addColor, suffix: "++" }
+      loc_del:       { value: "76,902",  class: delColor, suffix: "--", length: 7, dots: true, dots_class: "" }
+    rows:
+      - "{Repos:repo_data} {{k:Contributed}: {contrib_data}} | {Stars:star_data}"
+      - "{Commmits:commit_data} | {Followers:follower_data}"
+      - "{Lines of Code on GitHub:loc_data} ( {loc_add}, {loc_del} )"
