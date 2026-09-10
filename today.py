@@ -2,16 +2,21 @@ import datetime
 from dateutil import relativedelta
 import requests
 import os
-from lxml import etree
+import sys
 import time
 import hashlib
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cli'))
+from panel_stats import set_values, render  # panel.yaml is the source of truth for the SVGs
 
 # Fine-grained personal access token with All Repositories access:
 # Account permissions: read:Followers, read:Starring, read:Watching
 # Repository permissions: read:Commit statuses, read:Contents, read:Issues, read:Metadata, read:Pull Requests
 # Issues and pull requests permissions not needed at the moment, but may be used in the future
-HEADERS = {'authorization': 'token '+ os.environ['ACCESS_TOKEN']}
-USER_NAME = os.environ['USER_NAME'] # 'Rejman'
+# Read lazily so the module can be imported (e.g. by cli/fetch_stats.py) without
+# the env set; the API calls still fail loudly if the token is missing.
+HEADERS = {'authorization': 'token ' + os.environ.get('ACCESS_TOKEN', '')}
+USER_NAME = os.environ.get('USER_NAME', '') # 'Rejman'
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
@@ -467,8 +472,19 @@ if __name__ == '__main__':
 
     for index in range(len(total_loc)-1): total_loc[index] = '{:,}'.format(total_loc[index]) # format added, deleted, and total LOC
 
-    svg_overwrite('dark_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, follower_data, total_loc[:-1])
-    svg_overwrite('light_mode.svg', age_data, commit_data, star_data, repo_data, contrib_data, follower_data, total_loc[:-1])
+    # write the numbers into panel.yaml, then rebuild both SVG themes from it
+    set_values({
+        'age_data': age_data,
+        'repo_data': repo_data,
+        'contrib_data': contrib_data,
+        'star_data': star_data,
+        'commit_data': commit_data,
+        'follower_data': follower_data,
+        'loc_data': total_loc[2],
+        'loc_add': total_loc[0],
+        'loc_del': total_loc[1],
+    })
+    render()
 
     # move cursor to override 'Calculation times:' with 'Total function time:' and the total function time, then move cursor back
     print('\033[F\033[F\033[F\033[F\033[F\033[F\033[F\033[F',

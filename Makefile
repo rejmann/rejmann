@@ -13,3 +13,6 @@ ascii: ## regenera o bloco ASCII a partir de dark_mode.txt / light_mode.txt
 
 panel: ## regenera o painel de infos a partir de panel.yaml (dark + light)
 	python3 cli/panel_to_svg.py
+
+stats: ## busca os números do GitHub, grava no panel.yaml e regenera os SVGs (precisa de ACCESS_TOKEN e USER_NAME)
+	python3 cli/fetch_stats.py
