@@ -6,7 +6,9 @@ import sys
 import time
 import hashlib
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cli'))
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(HERE)
+sys.path.insert(0, HERE)
 from panel_stats import set_values, render, get_birthday  # panel.yaml is the source of truth for the SVGs
 
 # Fine-grained personal access token with All Repositories access:
@@ -403,6 +405,7 @@ if __name__ == '__main__':
     """
     Rejman Nascimento (Rejman), 2022-2025
     """
+    os.chdir(REPO_ROOT)  # cache/ paths below are repo-root-relative
     print('Calculation times:')
     # define global variable for owner ID and calculate user's creation date
     # e.g {'id': 'MDQ6VXNlcjU3MzMxMTM0'} and 2019-11-03T21:15:07Z for username 'Rejman'

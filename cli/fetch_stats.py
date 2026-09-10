@@ -29,8 +29,7 @@ ARCHIVE_OWNER = {'id': 'MDQ6VXNlcjU3MzMxMTM0'}
 def collect_stats():
     """Return {field_id: value}, mirroring the sequence in today.py's main."""
     os.chdir(ROOT)                 # cache/ lookups in today.py are CWD-relative
-    sys.path.insert(0, ROOT)
-    import today                   # deps + env only needed for the actual fetch
+    import today                   # sibling in cli/; deps + env only needed for the actual fetch
 
     age_data = today.daily_readme(get_birthday())
     login = os.environ['USER_NAME']

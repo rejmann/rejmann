@@ -1,4 +1,4 @@
-.PHONY: svg ascii panel help
+.PHONY: svg ascii panel stats help
 all: help
 SHELL=bash
 
