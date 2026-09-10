@@ -8,6 +8,9 @@ CO Founder [@Codarme.](https://github.com/codarmedev/)
 
 "Nada neste mundo supera a boa e velha persistência. O talento não supera. Nada mais comum do que fracassos talentosos. O gênio não supera. Gênios não reconhecidos são praticamente um clichê. A educação não excede. O mundo está cheio de tolos educados. Persistência e determinação sozinhos são poderosos."
 
-<div style="display: flex; width=520px;">
-  <img src="ascii.svg" width="650" alt="ascii art">
-</div>
+<a href="https://github.com/rejmann">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rejmann/main/dark_mode.svg">
+    <img alt="Rejman Nascimento's GitHub Profile README" src="https://raw.githubusercontent.com/rejmann/main/light_mode.svg">
+  </picture>
+</a>
