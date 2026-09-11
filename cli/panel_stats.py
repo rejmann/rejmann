@@ -1,6 +1,6 @@
 """Write computed numbers into panel.yaml and (re)render the SVGs.
 
-Shared by cli/fetch_stats.py (manual `make stats`) and today.py (CI): both
+Shared by cli/fetch_stats.py (manual) and today.py (CI / make setup): both
 collect the same GitHub numbers, then call :func:`set_values` so panel.yaml
 stays the single source of truth for what the SVGs show, and :func:`render` to
 rebuild both themes from it.

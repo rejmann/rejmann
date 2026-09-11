@@ -438,7 +438,7 @@ def require_env():
     if missing:
         raise RuntimeError(
             'Missing required environment variables: ' + ', '.join(missing) +
-            '. Copy .env.example to .env and populate the values before running the workflow locally.'
+            '. Copy .env.dist to .env and populate the values before running the workflow locally.'
         )
 
 

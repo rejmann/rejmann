@@ -5,8 +5,7 @@ Pulls the same values ``today.py`` computes — the "Uptime" age plus repos,
 contributed repos, stars, commits, followers and lines of code — writes them
 into panel.yaml via ``panel_stats.set_values`` and rebuilds both themes from it.
 panel.yaml stays the single source of truth for what ends up in the SVGs. (In
-CI, ``today.py`` does the same thing; this script is the manual entry point /
-``make stats``.)
+CI, ``today.py`` does the same thing; this script is the manual entry point.)
 
 Needs the same environment as ``today.py``: ``ACCESS_TOKEN`` and ``USER_NAME``.
 
