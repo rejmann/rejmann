@@ -25,7 +25,7 @@ GitHub GraphQL ─> cli/today.py ─> panel.yaml (reescreve os números)
 ## Início rápido
 
 ```bash
-make setup      # cria o .env (1ª vez), instala deps no .venv, busca stats e gera os SVGs
+make setup      # cria o .env (1ª vez), builda a imagem Docker, busca stats e gera os SVGs
 make svg        # só regenera os SVGs a partir do panel.yaml (não acessa a rede)
 make publish    # setup + commit dos arquivos gerados (não faz push)
 make help       # lista os alvos
@@ -66,7 +66,8 @@ preencha `ACCESS_TOKEN` e `USER_NAME` e rode de novo. Detalhes em
 │   └── <sha256>.txt          # cache de LOC/commits por repositório (GERADO)
 ├── Makefile                  # install / svg / setup / publish
 ├── .env.dist                 # modelo do .env (ACCESS_TOKEN, USER_NAME)
-├── docker-compose.yml        # serviços app / fetch / debug
+├── docker-compose.yml        # serviços app / fetch / debug (o Makefile usa o app)
+├── .dockerignore             # mantém .git, .venv e .env fora da imagem
 ├── devops/Dockerfile         # imagem python:3.12-slim com as deps
 ├── .github/workflows/build.yaml  # CI diário que atualiza e commita os SVGs
 └── doc/                      # esta documentação

@@ -113,5 +113,5 @@ XML.
 | `python3 cli/today.py` | Coleta completa + YAML + SVGs, com relatório de tempos e contagem de chamadas à API |
 | `python3 cli/fetch_stats.py [--no-render]` | Coleta + YAML (+ SVGs), imprime os campos gravados |
 | `python3 cli/build_svg.py` | Apenas SVGs, a partir do YAML atual |
-| `make setup` / `make publish` / `make svg` | Envolvem os scripts acima com venv e `.env` — ver [operacao.md](operacao.md) |
+| `make setup` / `make publish` / `make svg` | Rodam os scripts acima no container Docker (serviço `app`), com o `.env` — ver [operacao.md](operacao.md) |
 | `.github/workflows/build.yaml` | CI: `today.py` → `make svg` → commit + push |

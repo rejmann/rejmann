@@ -2,13 +2,14 @@
 
 ## Requisitos
 
-- Python 3 com `venv` (o CI usa 3.12)
+- Docker + Docker Compose (v2.24 ou mais novo, por causa do `env_file` com
+  `required: false`)
 - `make`, `git`
-- Opcional: Docker + Docker Compose
 - Para a coleta: um token do GitHub (ver [coleta.md](coleta.md#permissões-do-token))
 
-Dependências Python (`cache/requirements.txt`): `python-dateutil`, `requests`,
-`PyYAML`.
+Não é preciso ter Python na máquina: localmente, os scripts rodam no container
+(`python:3.12-slim`). As dependências Python (`cache/requirements.txt`:
+`python-dateutil`, `requests`, `PyYAML`) são instaladas na imagem.
 
 ## Configuração local
 
@@ -33,17 +34,24 @@ rápida só com os seus repositórios (usa um arquivo de cache separado), ou
 | Alvo | Faz |
 |------|-----|
 | `make` / `make help` | Lista os alvos (auto-documentados pelos comentários `##`). |
-| `make install` | Cria o `.venv` e instala as dependências. Só refaz quando `cache/requirements.txt` muda (arquivo-carimbo `.venv/.installed`). |
-| `make svg` | Recria os dois SVGs a partir do `panel.yaml` e dos `*_mode.txt`. Não acessa a rede. |
-| `make setup` | Garante `.env` e deps, carrega o `.env`, roda `cli/today.py` e depois `cli/build_svg.py`. |
-| `make publish` | `setup` + `git add` e `git commit -m "docs: Updated README"` dos arquivos gerados. **Não faz push.** |
+| `make install` | Builda a imagem do serviço `app` (`docker compose build app`). Só refaz quando `cache/requirements.txt` ou `devops/Dockerfile` mudam (arquivo-carimbo `.docker-built`). |
+| `make svg` | Recria os dois SVGs a partir do `panel.yaml` e dos `*_mode.txt`. Não acessa a rede e não precisa do `.env`. |
+| `make setup` | Garante `.env` e imagem, roda `cli/today.py` e depois `cli/build_svg.py` no container. |
+| `make publish` | `setup` + `git add` e `git commit -m "docs: Updated README"` dos arquivos gerados. **Não faz push** (o git roda na máquina, não no container). |
 
 Detalhes:
 
-- **Venv local vs. CI.** Localmente o Python usado é `.venv/bin/python` (o
-  Python do sistema costuma recusar `pip install`). Quando `GITHUB_ACTIONS`
-  está definida, o Makefile usa `python` direto, sem venv, porque o workflow
-  já instalou as dependências.
+- **Docker local vs. CI.** Localmente cada script roda com
+  `docker compose run --rm --user <uid>:<gid> app python3 ...`: o repositório
+  é montado em `/app`, então o que o script gera aparece no diretório local; o
+  `--user` faz esses arquivos saírem com o seu usuário como dono, e não root;
+  o `.env` chega ao container pelo `env_file` do serviço. Quando
+  `GITHUB_ACTIONS` está definida, o Makefile usa o `python` do runner direto,
+  sem Docker, porque o workflow já instalou as dependências.
+- **Imagem desatualizada.** O `docker compose run` builda a imagem sozinho se
+  ela não existir, mas não a atualiza quando o `requirements.txt` muda — é
+  para isso que existe o carimbo do `make install`. Para forçar um rebuild:
+  `rm .docker-built && make install`.
 - **`setup` renderiza mesmo se a coleta falhar**, como o CI, e sai com o
   código de erro da coleta.
 - **`publish` só commita os arquivos gerados**: `panel.yaml`,
@@ -55,7 +63,12 @@ Detalhes:
 `docker-compose.yml` define três serviços sobre a mesma imagem
 (`devops/Dockerfile`, `python:3.12-slim` com as dependências). Todos montam o
 repositório em `/app` — o que for gerado aparece no diretório local — e leem o
-`.env`.
+`.env` (no `app` ele é opcional, para o `make svg` rodar sem credenciais). O
+`.dockerignore` mantém `.git`, `.venv` e o `.env` fora da imagem; as
+credenciais só entram em tempo de execução.
+
+O Makefile usa só o serviço `app`, trocando o comando. Chamando o Compose
+direto, sem `--user`, os arquivos gerados saem com root como dono:
 
 | Serviço | Comando |
 |---------|---------|
@@ -131,4 +144,7 @@ conflito nele), aceite qualquer versão dos SVGs e rode `make svg`.
 | `error: themes.<modo> in panel.yaml is missing: ...` | Falta alguma das 7 cores do tema. Os SVGs antigos foram preservados. |
 | `error: no \`value:\` to update for <campo>` | A entrada do campo no `panel.yaml` saiu do formato esperado (mapa inline de uma linha, valor entre aspas duplas). Ver [painel.md](painel.md#campos-reescritos-automaticamente). |
 | `FileNotFoundError: ... <modo>_mode.txt` | Tema declarado em `themes:` sem o arquivo de arte correspondente. |
-| `ModuleNotFoundError: yaml` | Rodando fora do venv: use `make ...` ou `.venv/bin/python`. |
+| `ModuleNotFoundError: yaml` | Rodando o script com o Python da máquina: use `make ...` ou `docker compose run --rm app python3 cli/<script>.py`. |
+| `ModuleNotFoundError` depois de mudar o `requirements.txt` | Imagem antiga: `make install` (o carimbo detecta a mudança) ou `rm .docker-built && make install`. |
+| `permission denied` ao editar `panel.yaml`, SVGs ou `cache/` | Foram gerados como root por um `docker compose run` sem `--user`. Corrija com `sudo chown -R $(id -u):$(id -g) .` e prefira os alvos do `make`. |
+| `unable to get image` / `Cannot connect to the Docker daemon` | Docker parado ou usuário fora do grupo `docker`. |
