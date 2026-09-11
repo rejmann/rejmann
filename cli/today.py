@@ -19,6 +19,13 @@ from panel_stats import set_values, render, get_birthday  # panel.yaml is the so
 # the env set; the API calls still fail loudly if the token is missing.
 HEADERS = {'authorization': 'token ' + os.environ.get('ACCESS_TOKEN', '')}
 USER_NAME = os.environ.get('USER_NAME', '') # 'Rejman'
+# Which repos count towards LOC / contributed-repos. Full set by default (matches
+# CI); override with e.g. LOC_AFFILIATIONS=OWNER to skip collaborator/org repos
+# and validate the flow quickly against just your own repos.
+LOC_AFFILIATIONS = [a.strip() for a in os.environ.get('LOC_AFFILIATIONS', 'OWNER,COLLABORATOR,ORGANIZATION_MEMBER').split(',') if a.strip()]
+# Bounds every GitHub request so a stalled connection fails loudly instead of hanging
+# forever; the LOC crawl below is otherwise silent for minutes, which looks like a freeze.
+HTTP_TIMEOUT = float(os.environ.get('HTTP_TIMEOUT', '30'))
 QUERY_COUNT = {'user_getter': 0, 'follower_getter': 0, 'graph_repos_stars': 0, 'recursive_loc': 0, 'graph_commits': 0, 'loc_query': 0}
 
 
@@ -51,7 +58,7 @@ def simple_request(func_name, query, variables):
     """
     Returns a request, or raises an Exception if the response does not succeed.
     """
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS)
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS, timeout=HTTP_TIMEOUT)
     if request.status_code == 200:
         return request
     raise Exception(func_name, ' has failed with a', request.status_code, request.text, QUERY_COUNT)
@@ -151,10 +158,11 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
             }
         }
     }'''
+    page = 0
     while True:
         query_count('recursive_loc')
         variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
-        request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS) # I cannot use simple_request(), because I want to save the file before raising Exception
+        request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS, timeout=HTTP_TIMEOUT) # I cannot use simple_request(), because I want to save the file before raising Exception
         if request.status_code != 200:
             force_close_file(data, cache_comment) # saves what is currently in the file before this program crashes
             if request.status_code == 403:
@@ -165,6 +173,9 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
         if default_branch_ref is None: # repo is empty, nothing to count
             return 0
         history = default_branch_ref['target']['history']
+        if page == 0: # this is silent otherwise, which for a big repo looks like a freeze
+            print(f'    {owner}/{repo_name}: {history["totalCount"]} commits to scan', flush=True)
+        page += 1
 
         for node in history['edges']:
             commit = node.get('node', {}) if isinstance(node, dict) else {}
@@ -250,6 +261,7 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
 
     cache_comment = data[:comment_size] # save the comment block
     data = data[comment_size:] # remove those lines
+    print(f'  checking {len(edges)} repositories for LOC changes ({USER_NAME})...', flush=True)
     for index in range(len(edges)):
         repo_hash, commit_count, *__ = data[index].split()
         if repo_hash == hashlib.sha256(edges[index]['node']['nameWithOwner'].encode('utf-8')).hexdigest():
@@ -428,12 +440,12 @@ if __name__ == '__main__':
     formatter('account data', user_time)
     age_data, age_time = perf_counter(daily_readme, get_birthday())
     formatter('age calculation', age_time)
-    total_loc, loc_time = perf_counter(loc_query, ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
+    total_loc, loc_time = perf_counter(loc_query, LOC_AFFILIATIONS, 7)
     formatter('LOC (cached)', loc_time) if total_loc[-1] else formatter('LOC (no cache)', loc_time)
     commit_data, commit_time = perf_counter(commit_counter, 7)
     star_data, star_time = perf_counter(graph_repos_stars, 'stars', ['OWNER'])
     repo_data, repo_time = perf_counter(graph_repos_stars, 'repos', ['OWNER'])
-    contrib_data, contrib_time = perf_counter(graph_repos_stars, 'repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    contrib_data, contrib_time = perf_counter(graph_repos_stars, 'repos', LOC_AFFILIATIONS)
     follower_data, follower_time = perf_counter(follower_getter, USER_NAME)
 
     # several repositories that I've contributed to have since been deleted.
