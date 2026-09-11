@@ -93,30 +93,40 @@ literalmente depois do prefixo `. `, sem escape:
 
 ## Seções com `fields:` (GitHub Stats)
 
-Os valores do GitHub têm alinhamento próprio, que replica o `justify_format`
-do projeto original. Por isso a seção "GitHub Stats" usa campos declarados em
-`fields:` e linhas escritas como templates.
+Uma linha de stats pode ter mais de um valor (`Repos … 46 {Contributed: 46}`)
+e valores com cores e sufixos próprios (`3,735,641++`). Por isso a seção
+"GitHub Stats" usa campos declarados em `fields:` e linhas escritas como
+templates. O alinhamento é o mesmo das outras seções: o pontilhado do primeiro
+`{Rótulo:campo}` de cada linha estica até a linha terminar na coluna do painel.
+
+```
+. Stars: ................................................... 4
+. Diff: ............................. 3,735,641++, 2,218,088--
+```
 
 ### Campos
 
 ```yaml
 fields:
-  repo_data:     { value: "46",        length: 6,  dots: true }
+  repo_data:     { value: "46" }
   contrib_data:  { value: "46" }
   loc_add:       { value: "3,735,641", class: addColor, suffix: "++" }
-  loc_del:       { value: "2,218,088", class: delColor, suffix: "--", length: 7, dots: true, dots_class: "" }
+  loc_del:       { value: "2,218,088", class: delColor, suffix: "--" }
 ```
 
 | Atributo | Padrão | Descrição |
 |----------|--------|-----------|
 | `value` | `"0"` | Texto exibido. Reescrito pelo `today.py`. |
-| `class` | `value` | Classe CSS do valor (e do sufixo): `value`, `addColor`, `delColor`, `key`, `cc`. |
-| `dots` | `false` | Se `true`, insere um pontilhado antes do valor. |
-| `length` | `0` | Coluna-alvo do pontilhado: o pontilhado preenche `length - len(value)` posições. |
-| `dots_class` | `cc` | Classe do pontilhado. `""` = sem classe (herda a cor `text`). |
+| `class` | `value` | Classe CSS do valor (e do prefixo/sufixo): `value`, `addColor`, `delColor`, `key`, `cc`. |
+| `prefix` | — | Texto logo antes do valor, na mesma classe (ex.: `+`, `-`, `~`). |
 | `suffix` | — | Texto logo após o valor, na mesma classe (ex.: `++`, `--`). |
+| `dots_class` | `cc` | Classe do pontilhado. `""` = sem classe (herda a cor `text`). |
+| `dots` | `false` | Só para `{campo}` sem rótulo (e `{Rótulo:campo}` que não é o primeiro da linha): se `true`, insere um pontilhado de largura fixa antes do valor. |
+| `length` | `0` | Largura desse pontilhado fixo: ele preenche `length - len(value)` posições. |
 
-Regra do pontilhado (`stats_dots`), com `just = max(0, length - len(value))`:
+O pontilhado elástico do primeiro `{Rótulo:campo}` ignora `dots` e `length`.
+A regra do pontilhado fixo (`stats_dots`), com
+`just = max(0, length - len(value))`:
 
 | `just` | Saída |
 |:---:|-------|
@@ -130,8 +140,8 @@ Regra do pontilhado (`stats_dots`), com `just = max(0, length - len(value))`:
 | Token | Resultado |
 |-------|-----------|
 | `{k:Texto}` | `Texto` como rótulo colorido (classe `key`) |
-| `{Rótulo:campo}` | rótulo + `:` + pontilhado (se `dots`) + valor do `campo` |
-| `{campo}` | só o valor do `campo` (com pontilhado se `dots: true`) |
+| `{Rótulo:campo}` | rótulo + `:` + pontilhado + valor do `campo`. No primeiro da linha o pontilhado estica até alinhar com as outras linhas; nos seguintes, usa o pontilhado fixo (se `dots`). |
+| `{campo}` | só o valor do `campo` (com pontilhado fixo se `dots: true`) |
 
 Tokens com campo desconhecido e chaves soltas ficam como texto literal. É isso
 que permite `{{k:Contributed}: {contrib_data}}` — o par externo de chaves
@@ -140,9 +150,9 @@ aparece no SVG:
 ```yaml
 rows:
   - "{Repos:repo_data} {{k:Contributed}: {contrib_data}}"
-  # . Repos: .... 46 {Contributed: 46}
-  - "{k:Diff}: {loc_add}, {loc_del}"
-  # . Diff: 3,735,641++, 2,218,088--
+  # . Repos: ................................ 46 {Contributed: 46}
+  - "{Diff:loc_add}, {loc_del}"
+  # . Diff: ............................. 3,735,641++, 2,218,088--
 ```
 
 ## Campos reescritos automaticamente
@@ -174,7 +184,7 @@ Se algum campo pedido não for encontrado, o script aborta com
 `error: no \`value:\` to update for <campo> in panel.yaml` sem gravar nada.
 
 Pode-se mudar livremente rótulos, ordem das linhas, separadores, `length`,
-classes e sufixos — só não quebre o formato acima nem renomeie os campos.
+classes, prefixos e sufixos — só não quebre o formato acima nem renomeie os campos.
 
 ## Arte ASCII (`<modo>_mode.txt`)
 

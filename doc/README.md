@@ -90,8 +90,6 @@ o fluxo atual):
 - **Default mutável em `loc_query(..., edges=[])`.** A lista acumula entre
   chamadas no mesmo processo. Hoje `loc_query` é chamado uma vez por execução,
   então não há efeito.
-- **Rótulo com erro de digitação:** `"{Commmits:commit_data}"` no `panel.yaml`
-  (três "m").
 - **Resumo de tempo no terminal do `today.py`.** A linha "Total function time"
   sobe o cursor 8 linhas com ANSI para sobrescrever "Calculation times:", mas
   a saída hoje tem mais linhas que isso (logs do scan e da renderização), então

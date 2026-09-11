@@ -91,7 +91,8 @@ O maior entre:
 - `len(header) + 8`;
 - `len("- " + title) + 8` de cada seção com título;
 - `5 + len(key) + len(value) + 4` de cada linha chave/valor;
-- o comprimento visível (sem tags) de cada template de stats já expandido.
+- `2 + ` o comprimento visível de cada template de stats expandido com o
+  pontilhado mínimo.
 
 ### Montagem — `build_panel(doc, cols)`
 
@@ -133,21 +134,34 @@ os traços são texto solto do `<text>`, na cor `text`.
 `key_markup()` transforma `"A.B"` em dois `<tspan class="key">` unidos por um
 ponto literal.
 
-### Templates de stats — `render_stats_row(template, fields)`
+### Templates de stats — `render_stats_row(template, fields, cols)`
+
+```
+. Diff: ............................. 3,735,641++, 2,218,088--
+```
 
 Três substituições por regex, nesta ordem:
 
 1. `{k:Texto}` → `key_markup(Texto)`
-2. `{Rótulo:campo}` → `key_markup(Rótulo) + ":" + field_markup(campo)`, se o
-   campo existir
+2. `{Rótulo:campo}` → `key_markup(Rótulo) + ":"` + pontilhado +
+   `value_markup(campo)`, se o campo existir
 3. `{campo}` → `field_markup(campo)`, se o campo existir
 
-`field_markup()` emite, na ordem: pontilhado (`stats_dots`, se `dots: true`,
-com `id="<campo>_dots"`), valor (`id="<campo>"`, classe `class`) e sufixo.
-A regra do pontilhado está em [painel.md](painel.md#campos).
+No primeiro `{Rótulo:campo}` da linha o pontilhado é **elástico**: entra um
+marcador (`FLEX`), a linha é expandida por inteiro, mede-se a largura visível
+(`visible_len`: sem tags e com entidades decodificadas) e o marcador vira
+`<tspan class="cc" id="<campo>_dots"> …… </tspan>` com
+`max(MIN_DOTS, cols − len(". ") − largura − 2)` pontos. Assim a linha termina
+na coluna `cols`, como as linhas chave/valor, qualquer que seja o tamanho dos
+números. Com `cols=0` sai o pontilhado mínimo, o que dá a largura natural da
+linha — é assim que `effective_cols` mede as linhas de stats.
 
-Note que o alinhamento das linhas de stats é **por campo** (`length`), não pela
-largura do painel — as linhas de stats não são esticadas até `cols`.
+Os demais `{Rótulo:campo}` da linha e os `{campo}` usam `field_markup()`:
+pontilhado fixo (`stats_dots`, se `dots: true`, com `id="<campo>_dots"`),
+prefixo, valor (`id="<campo>"`) e sufixo — os três na classe `class`, via
+`value_markup()`. A regra do pontilhado fixo
+está em [painel.md](painel.md#campos). Linhas sem `{Rótulo:campo}` não são
+esticadas.
 
 ### Escape
 
