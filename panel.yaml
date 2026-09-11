@@ -59,6 +59,7 @@ sections:
     rows:
       - "{Repos:repo_data} {{k:Contributed}: {contrib_data}}"
       - "{Stars:star_data}"
-      - "{Commmits:commit_data} | {Followers:follower_data}"
+      - "{Followers:follower_data}"
+      - "{Commmits:commit_data}"
       - "{Lines of Code on GitHub:loc_data}"
       - "{Diff: {loc_add}, {loc_del}}"
