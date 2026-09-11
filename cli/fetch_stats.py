@@ -33,7 +33,7 @@ def collect_stats():
 
     age_data = today.daily_readme(get_birthday())
     login = os.environ['USER_NAME']
-    today.OWNER_ID = today.user_getter(login)[0]   # loc_counter_one_repo reads this global
+    today.OWNER_ID = today.user_getter(login)[0]   # recursive_loc reads this global
 
     total_loc = today.loc_query(['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
     commit_data = today.commit_counter(7)
