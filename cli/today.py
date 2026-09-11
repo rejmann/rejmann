@@ -168,10 +168,14 @@ def loc_counter_one_repo(owner, repo_name, data, cache_comment, history, additio
     only adds the LOC value of commits authored by me
     """
     for node in history['edges']:
-        if node['node']['author']['user'] == OWNER_ID:
+        commit = node.get('node', {}) if isinstance(node, dict) else {}
+        author = commit.get('author') if isinstance(commit, dict) else None
+        author_user = author.get('user') if isinstance(author, dict) else None
+
+        if author_user == OWNER_ID:
             my_commits += 1
-            addition_total += node['node']['additions']
-            deletion_total += node['node']['deletions']
+            addition_total += commit.get('additions', 0)
+            deletion_total += commit.get('deletions', 0)
 
     if history['edges'] == [] or not history['pageInfo']['hasNextPage']:
         return addition_total, deletion_total, my_commits
@@ -401,10 +405,21 @@ def formatter(query_type, difference, funct_return=False, whitespace=0):
     return funct_return
 
 
+def require_env():
+    """Fail fast with a clear message when local debug or CI secrets are missing."""
+    missing = [name for name in ('ACCESS_TOKEN', 'USER_NAME') if not os.environ.get(name)]
+    if missing:
+        raise RuntimeError(
+            'Missing required environment variables: ' + ', '.join(missing) +
+            '. Copy .env.example to .env and populate the values before running the workflow locally.'
+        )
+
+
 if __name__ == '__main__':
     """
     Rejman Nascimento (Rejman), 2022-2025
     """
+    require_env()
     os.chdir(REPO_ROOT)  # cache/ paths below are repo-root-relative
     print('Calculation times:')
     # define global variable for owner ID and calculate user's creation date
