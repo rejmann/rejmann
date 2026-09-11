@@ -30,7 +30,13 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           USER_NAME: ${{ secrets.USER_NAME }}
         run: python cli/today.py
+      # roda mesmo se a coleta de stats falhar, para que mudanças de layout no
+      # panel.yaml / *_mode.txt sempre cheguem aos SVGs (com os números atuais do YAML)
+      - name: Render SVGs
+        if: ${{ !cancelled() }}
+        run: make svg
       - name: Commit
+        if: ${{ !cancelled() }}
         run: |-
           git add .
           git diff

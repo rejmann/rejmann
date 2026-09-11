@@ -62,4 +62,4 @@ sections:
       - "{Followers:follower_data}"
       - "{Commmits:commit_data}"
       - "{Lines of Code on GitHub:loc_data}"
-      - "{Diff: {loc_add}, {loc_del}}"
+      - "{k:Diff}: {loc_add}, {loc_del}"
