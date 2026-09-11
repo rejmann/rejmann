@@ -5,13 +5,13 @@
 # (arte ASCII). Nunca edite os .svg à mão — a próxima geração descarta.
 #
 # Os campos vindos do GitHub — o `value:` de cada item em `fields:` e o da linha
-# "Uptime" — são reescritos automaticamente por `make stats` (e pelo today.py no
-# CI), que busca os números, grava aqui e regenera os SVGs.
+# "Uptime" — são reescritos automaticamente pelo today.py (`make setup` / `make publish`
+# e o CI), que busca os números, grava aqui e regenera os SVGs.
 #
 #   key    -> rótulo; use ponto para subníveis: "Languages.Programming"
 #   value  -> texto exibido; o pontilhado é calculado para alinhar a coluna
 #   id     -> (opcional) liga o campo aos hooks do today.py; o value serve de
-#             ponto de partida e é reescrito por `make stats`
+#             ponto de partida e é reescrito pelo today.py
 #   spacer -> linha em branco dentro da seção
 #   raw    -> conteúdo SVG cru da linha (escape hatch; raramente necessário)
 #
@@ -20,7 +20,7 @@
 #   {Rótulo:campo}  -> rótulo + pontilhado + valor (campo definido em `fields`)
 #   {campo}         -> só o valor (com pontilhado se o campo tiver `dots: true`)
 # Ajuste rótulos/ordem/separadores nas `rows`; o `value:` de cada campo é
-# reescrito por `make stats`. O pontilhado replica o justify_format do today.py.
+# reescrito pelo today.py. O pontilhado replica o justify_format do today.py.
 
 header: "rejman@root"     # título antes da régua tracejada
 birthday: "1998-08-21"          # YYYY-MM-DD; o today.py calcula a linha "Uptime" a partir daqui
