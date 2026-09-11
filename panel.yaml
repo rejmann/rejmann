@@ -72,13 +72,13 @@ sections:
   - title: "GitHub Stats"
     fields:                       # contrato com o today.py — mexa só se ele mudar
       repo_data:     { value: "46" }
-      contrib_data:  { value: "46" }
+      contrib_data:  { value: "69" }
       star_data:     { value: "4" }
-      commit_data:   { value: "1,052" }
+      commit_data:   { value: "5,284" }
       follower_data: { value: "23" }
-      loc_data:      { value: "1,517,553" }
-      loc_add:       { value: "3,735,641", class: addColor, prefix: "++" }
-      loc_del:       { value: "2,218,088", class: delColor, prefix: "--" }
+      loc_data:      { value: "4,113,057" }
+      loc_add:       { value: "10,309,147", class: addColor, prefix: "++" }
+      loc_del:       { value: "6,196,090", class: delColor, prefix: "--" }
     rows:
       - "{Repos:repo_data} {{k:Contributed}: {contrib_data}}"
       - "{Stars:star_data}"
