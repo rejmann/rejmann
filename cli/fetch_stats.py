@@ -33,13 +33,13 @@ def collect_stats():
 
     age_data = today.daily_readme(get_birthday())
     login = os.environ['USER_NAME']
-    today.OWNER_ID = today.user_getter(login)[0]   # loc_counter_one_repo reads this global
+    today.OWNER_ID = today.user_getter(login)[0]   # recursive_loc reads this global
 
-    total_loc = today.loc_query(['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'], 7)
+    total_loc = today.loc_query(today.LOC_AFFILIATIONS, 7)
     commit_data = today.commit_counter(7)
     star_data = today.graph_repos_stars('stars', ['OWNER'])
     repo_data = today.graph_repos_stars('repos', ['OWNER'])
-    contrib_data = today.graph_repos_stars('repos', ['OWNER', 'COLLABORATOR', 'ORGANIZATION_MEMBER'])
+    contrib_data = today.graph_repos_stars('repos', today.LOC_AFFILIATIONS)
     follower_data = today.follower_getter(login)
 
     if today.OWNER_ID == ARCHIVE_OWNER:            # add back repos that were deleted

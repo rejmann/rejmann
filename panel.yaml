@@ -30,7 +30,7 @@ sections:
   - title: null                 # a primeira seção não tem cabeçalho
     rows:
       - { key: "OS",     value: "Windows 11, Android 16, Linux" }
-      - { key: "Uptime", value: "28 years", id: age_data }
+      - { key: "Uptime", value: "28 years, 0 months, 21 days", id: age_data }
       - { key: "Host",   value: "Codarme Sistemas, Ltda" }
       - { key: "Kernel", value: "Developer" }
       - { key: "IDE",    value: "VSCode" }
@@ -48,14 +48,14 @@ sections:
 
   - title: "GitHub Stats"
     fields:                       # contrato com o today.py — mexa só se ele mudar
-      repo_data:     { value: "95",      length: 6,  dots: true }
-      contrib_data:  { value: "133" }
-      star_data:     { value: "342",     length: 14, dots: true }
-      commit_data:   { value: "2,116",   length: 22, dots: true }
-      follower_data: { value: "196",     length: 10, dots: true }
-      loc_data:      { value: "446,276", length: 9,  dots: true }
-      loc_add:       { value: "523,178", class: addColor, suffix: "++" }
-      loc_del:       { value: "76,902",  class: delColor, suffix: "--", length: 7, dots: true, dots_class: "" }
+      repo_data:     { value: "46",      length: 6,  dots: true }
+      contrib_data:  { value: "46" }
+      star_data:     { value: "4",     length: 14, dots: true }
+      commit_data:   { value: "1,038",   length: 22, dots: true }
+      follower_data: { value: "23",     length: 10, dots: true }
+      loc_data:      { value: "1,517,459", length: 9,  dots: true }
+      loc_add:       { value: "3,735,088", class: addColor, suffix: "++" }
+      loc_del:       { value: "2,217,629",  class: delColor, suffix: "--", length: 7, dots: true, dots_class: "" }
     rows:
       - "{Repos:repo_data} {{k:Contributed}: {contrib_data}} | {Stars:star_data}"
       - "{Commmits:commit_data} | {Followers:follower_data}"

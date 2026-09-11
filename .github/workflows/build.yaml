@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 5 # cancela o job (falho) se passar disso, em vez de deixar rodando
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
