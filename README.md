@@ -10,7 +10,7 @@ CO Founder [@Codarme.](https://github.com/codarmedev/)
 
 <a href="https://github.com/rejmann">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rejmann/main/dark_mode.svg">
-    <img alt="Rejman Nascimento's GitHub Profile README" src="https://raw.githubusercontent.com/rejmann/main/light_mode.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rejmann/rejmann/main/dark_mode.svg">
+    <img alt="Rejman Nascimento's GitHub Profile README" src="https://raw.githubusercontent.com/rejmann/rejmann/main/light_mode.svg">
   </picture>
 </a>
