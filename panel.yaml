@@ -1,6 +1,8 @@
 # ── Painel compartilhado dos SVGs de perfil ──────────────────────────────────
-# Fonte da verdade dos dois temas (dark_mode.svg e light_mode.svg). Preencha e
-# rode `make panel` (ou `make svg`, que também regenera a arte ASCII).
+# Fonte da verdade dos dois temas (dark_mode.svg e light_mode.svg). Os SVGs são
+# saída de build: `make svg` apaga os dois e os recria do zero a partir deste
+# arquivo (painel + cores em `themes:`) e de dark_mode.txt / light_mode.txt
+# (arte ASCII). Nunca edite os .svg à mão — a próxima geração descarta.
 #
 # Os campos vindos do GitHub — o `value:` de cada item em `fields:` e o da linha
 # "Uptime" — são reescritos automaticamente por `make stats` (e pelo today.py no
@@ -25,6 +27,24 @@ birthday: "1998-08-21"          # YYYY-MM-DD; o today.py calcula a linha "Uptime
 width: 60                       # largura mínima (em colunas) do alinhamento;
                                 # se algum value passar disso, o painel e o
                                 # canvas dos SVGs crescem sozinhos pra caber
+
+themes:                         # um <modo>_mode.svg por tema (arte em <modo>_mode.txt)
+  dark:
+    background: "#161b22"
+    text:       "#c9d1d9"       # arte ASCII e texto sem classe (réguas, chaves)
+    key:        "#ffa657"
+    value:      "#a5d6ff"
+    addColor:   "#3fb950"
+    delColor:   "#f85149"
+    cc:         "#616e7f"       # pontilhado e prefixo ". "
+  light:
+    background: "#f6f8fa"
+    text:       "#24292f"
+    key:        "#953800"
+    value:      "#0a3069"
+    addColor:   "#1a7f37"
+    delColor:   "#cf222e"
+    cc:         "#c2cfde"
 
 sections:
   - title: null                 # a primeira seção não tem cabeçalho

@@ -81,5 +81,5 @@ def set_values(mapping, path=PANEL_YAML):
 
 
 def render():
-    """Rebuild dark_mode.svg / light_mode.svg from panel.yaml."""
-    subprocess.run([sys.executable, os.path.join(HERE, 'panel_to_svg.py')], check=True)
+    """Recreate dark_mode.svg / light_mode.svg from scratch (panel.yaml + *_mode.txt)."""
+    subprocess.run([sys.executable, os.path.join(HERE, 'build_svg.py')], check=True)
