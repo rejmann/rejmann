@@ -17,10 +17,13 @@
 #
 # Seção com `fields:` (GitHub Stats) — as linhas viram templates de texto:
 #   {k:Texto}       -> rótulo colorido
-#   {Rótulo:campo}  -> rótulo + pontilhado + valor (campo definido em `fields`)
-#   {campo}         -> só o valor (com pontilhado se o campo tiver `dots: true`)
+#   {Rótulo:campo}  -> rótulo + pontilhado + valor (campo definido em `fields`);
+#                      o pontilhado do primeiro da linha estica até o fim da
+#                      linha terminar na mesma coluna das demais seções
+#   {campo}         -> só o valor (com pontilhado de `length` colunas se o campo
+#                      tiver `dots: true`)
 # Ajuste rótulos/ordem/separadores nas `rows`; o `value:` de cada campo é
-# reescrito pelo today.py. O pontilhado replica o justify_format do today.py.
+# reescrito pelo today.py.
 
 header: "rejman@root"     # título antes da régua tracejada
 birthday: "1998-08-21"          # YYYY-MM-DD; o today.py calcula a linha "Uptime" a partir daqui
@@ -68,18 +71,18 @@ sections:
 
   - title: "GitHub Stats"
     fields:                       # contrato com o today.py — mexa só se ele mudar
-      repo_data:     { value: "46",      length: 6,  dots: true }
+      repo_data:     { value: "46" }
       contrib_data:  { value: "46" }
-      star_data:     { value: "4",     length: 14, dots: true }
-      commit_data:   { value: "1,052",   length: 22, dots: true }
-      follower_data: { value: "23",     length: 10, dots: true }
-      loc_data:      { value: "1,517,553", length: 9,  dots: true }
-      loc_add:       { value: "3,735,641", class: addColor, suffix: "++" }
-      loc_del:       { value: "2,218,088",  class: delColor, suffix: "--", length: 7, dots: true, dots_class: "" }
+      star_data:     { value: "4" }
+      commit_data:   { value: "1,052" }
+      follower_data: { value: "23" }
+      loc_data:      { value: "1,517,553" }
+      loc_add:       { value: "3,735,641", class: addColor, prefix: "++" }
+      loc_del:       { value: "2,218,088", class: delColor, prefix: "--" }
     rows:
       - "{Repos:repo_data} {{k:Contributed}: {contrib_data}}"
       - "{Stars:star_data}"
       - "{Followers:follower_data}"
-      - "{Commmits:commit_data}"
+      - "{Commits:commit_data}"
       - "{Lines of Code on GitHub:loc_data}"
-      - "{k:Diff}: {loc_add}, {loc_del}"
+      - "{Diff:loc_add}, {loc_del}"
