@@ -1,25 +1,50 @@
-.PHONY: help svg stats setup up docker-own-repos
+.PHONY: help setup install svg publish
 all: help
 SHELL := /bin/bash
 
+VENV  := .venv
+STAMP := $(VENV)/.installed
+# arquivos que o fluxo reescreve — é só isso que `make publish` commita
+GENERATED := panel.yaml dark_mode.svg light_mode.svg cache
+
+# Localmente tudo roda num venv (o python do sistema recusa `pip install`); no
+# GitHub Actions o setup-python + "Install dependencies" do build.yaml já entregam
+# o interpretador com as deps, então `make svg` lá não cria venv nenhum.
+ifdef GITHUB_ACTIONS
+PYTHON := python
+DEPS   :=
+else
+PYTHON := $(VENV)/bin/python
+DEPS   := $(STAMP)
+endif
+
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-help: ## show this help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-24s\033[0m %s\n", $$1, $$2}'
+help: ## mostra esta ajuda
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
-svg: ## apaga e recria os dois SVGs do zero (panel.yaml + dark_mode.txt / light_mode.txt)
-	python3 cli/build_svg.py
+.env:
+	@cp .env.dist .env
+	@echo "criei o .env a partir do .env.dist: preencha ACCESS_TOKEN e USER_NAME e rode o make de novo"; exit 1
 
-stats: ## busca os números do GitHub, grava no panel.yaml e regenera os SVGs (precisa de ACCESS_TOKEN e USER_NAME)
-	python3 cli/fetch_stats.py
+$(STAMP): cache/requirements.txt
+	python3 -m venv $(VENV)
+	$(PYTHON) -m pip install -r cache/requirements.txt
+	@touch $@
 
-.env: ## cria .env a partir de .env.example (não sobrescreve um .env existente)
-	@test -f .env || cp .env.example .env
+install: $(DEPS) ## cria o .venv e instala cache/requirements.txt (só refaz se o requirements mudar)
 
-setup: .env ## primeira vez: cria o .env e sobe o ambiente Docker
-	$(MAKE) up
+svg: $(DEPS) ## apaga e recria os dois SVGs do zero (panel.yaml + dark_mode.txt / light_mode.txt)
+	$(PYTHON) cli/build_svg.py
 
-up: ## builda e sobe os containers via docker compose
-	docker compose up --build -d
+# mesmos passos do build.yaml: stats do GitHub -> panel.yaml -> SVGs; como no CI,
+# os SVGs são recriados mesmo se a coleta falhar (e o make sai com o erro dela)
+setup: .env install ## build inicial: cria o .env, instala as deps, busca as stats e gera os SVGs
+	@set -a; . ./.env; set +a; \
+	status=0; $(PYTHON) cli/today.py || status=$$?; \
+	$(PYTHON) cli/build_svg.py && exit $$status
 
-update-panel: ## fetch -> panel.yaml -> SVGs no container, de verdade, mas só com seus repos próprios (sem colaborador/org)
-	docker compose run --rm -e LOC_AFFILIATIONS=OWNER app
+publish: setup ## fluxo completo do build.yaml + commit dos arquivos gerados (sem push)
+	git add -- $(GENERATED)
+	@git diff --cached --quiet -- $(GENERATED) \
+		&& echo "No changes to commit" \
+		|| git commit -m "docs: Updated README" -- $(GENERATED)
