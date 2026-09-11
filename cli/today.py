@@ -22,7 +22,8 @@ USER_NAME = os.environ.get('USER_NAME', '') # 'Rejman'
 # Which repos count towards LOC / contributed-repos. Full set by default (matches
 # CI); override with e.g. LOC_AFFILIATIONS=OWNER to skip collaborator/org repos
 # and validate the flow quickly against just your own repos.
-LOC_AFFILIATIONS = [a.strip() for a in os.environ.get('LOC_AFFILIATIONS', 'OWNER,COLLABORATOR,ORGANIZATION_MEMBER').split(',') if a.strip()]
+DEFAULT_AFFILIATIONS = 'OWNER,COLLABORATOR,ORGANIZATION_MEMBER'
+LOC_AFFILIATIONS = [a.strip() for a in os.environ.get('LOC_AFFILIATIONS', DEFAULT_AFFILIATIONS).split(',') if a.strip()]
 # Bounds every GitHub request so a stalled connection fails loudly instead of hanging
 # forever; the LOC crawl below is otherwise silent for minutes, which looks like a freeze.
 HTTP_TIMEOUT = float(os.environ.get('HTTP_TIMEOUT', '30'))
@@ -125,14 +126,17 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
     Uses GitHub's GraphQL v4 API and cursor pagination to fetch 100 commits from a
     repository at a time, looping (not recursing) through every page so a repo with
     a very long history can't blow the call stack (RecursionError).
+    History is filtered server-side to commits authored by me: only those count, and
+    a big shared repo (e.g. 56k commits, ~3k mine) would otherwise take ~20x the pages
+    and blow past the CI job timeout.
     """
     query = '''
-    query ($repo_name: String!, $owner: String!, $cursor: String) {
+    query ($repo_name: String!, $owner: String!, $cursor: String, $author: ID) {
         repository(name: $repo_name, owner: $owner) {
             defaultBranchRef {
                 target {
                     ... on Commit {
-                        history(first: 100, after: $cursor) {
+                        history(first: 100, after: $cursor, author: {id: $author}) {
                             totalCount
                             edges {
                                 node {
@@ -161,7 +165,7 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
     page = 0
     while True:
         query_count('recursive_loc')
-        variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor}
+        variables = {'repo_name': repo_name, 'owner': owner, 'cursor': cursor, 'author': OWNER_ID['id']}
         request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables':variables}, headers=HEADERS, timeout=HTTP_TIMEOUT) # I cannot use simple_request(), because I want to save the file before raising Exception
         if request.status_code != 200:
             force_close_file(data, cache_comment) # saves what is currently in the file before this program crashes
@@ -174,7 +178,7 @@ def recursive_loc(owner, repo_name, data, cache_comment, addition_total=0, delet
             return 0
         history = default_branch_ref['target']['history']
         if page == 0: # this is silent otherwise, which for a big repo looks like a freeze
-            print(f'    {owner}/{repo_name}: {history["totalCount"]} commits to scan', flush=True)
+            print(f'    {owner}/{repo_name}: {history["totalCount"]} of my commits to scan', flush=True)
         page += 1
 
         for node in history['edges']:
@@ -242,7 +246,7 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
     If it has, run recursive_loc on that repository to update the LOC count
     """
     cached = True # Assume all repositories are cached
-    filename = 'cache/'+hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest()+'.txt' # Create a unique filename for each user
+    filename = cache_filename()
     try:
         with open(filename, 'r') as f:
             data = f.readlines()
@@ -281,6 +285,18 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
         loc_add += int(loc[3])
         loc_del += int(loc[4])
     return [loc_add, loc_del, loc_add - loc_del, cached]
+
+
+def cache_filename():
+    """
+    Unique cache file per user. A non-default LOC_AFFILIATIONS gets its own file, so a
+    local owner-only run can't overwrite the full cache CI relies on (a repo-count
+    mismatch wipes the cache and forces a from-scratch rescan of every repo).
+    """
+    name = hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest()
+    if set(LOC_AFFILIATIONS) != set(DEFAULT_AFFILIATIONS.split(',')):
+        name += '-' + '_'.join(sorted(a.lower() for a in LOC_AFFILIATIONS))
+    return 'cache/' + name + '.txt'
 
 
 def flush_cache(edges, filename, comment_size):
@@ -322,7 +338,7 @@ def force_close_file(data, cache_comment):
     Forces the file to close, preserving whatever data was written to it
     This is needed because if this function is called, the program would've crashed before the file is properly saved and closed
     """
-    filename = 'cache/'+hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest()+'.txt'
+    filename = cache_filename()
     with open(filename, 'w') as f:
         f.writelines(cache_comment)
         f.writelines(data)
@@ -343,7 +359,7 @@ def commit_counter(comment_size):
     Counts up my total commits, using the cache file created by cache_builder.
     """
     total_commits = 0
-    filename = 'cache/'+hashlib.sha256(USER_NAME.encode('utf-8')).hexdigest()+'.txt' # Use the same filename as cache_builder
+    filename = cache_filename() # Use the same filename as cache_builder
     with open(filename, 'r') as f:
         data = f.readlines()
     cache_comment = data[:comment_size] # save the comment block

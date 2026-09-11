@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 5 # cancela o job (falho) se passar disso, em vez de deixar rodando
+    timeout-minutes: 10 # cancela o job (falho) se passar disso, em vez de deixar rodando; um rescan completo do LOC (sem cache) leva ~3 min
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
