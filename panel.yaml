@@ -80,9 +80,9 @@ sections:
       loc_add:       { value: "10,309,147", class: addColor, prefix: "++" }
       loc_del:       { value: "6,196,090", class: delColor, prefix: "--" }
     rows:
-      - "{Repos:repo_data} {{k:Contributed}: {contrib_data}}"
+      - "{Repos:repo_data}"
+      - "{Contributed:contrib_data}"
       - "{Stars:star_data}"
-      - "{Followers:follower_data}"
       - "{Commits:commit_data}"
       - "{Lines of Code on GitHub:loc_data}"
       - "{Diff:loc_add}, {loc_del}"
