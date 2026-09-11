@@ -4,7 +4,8 @@ services:
       context: .
       dockerfile: devops/Dockerfile
     env_file:
-      - .env
+      - path: .env
+        required: false   # `make svg` usa este serviço e não precisa de credenciais
     working_dir: /app
     command: python3 cli/today.py
     volumes:

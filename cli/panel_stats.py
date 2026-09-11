@@ -1,6 +1,6 @@
 """Write computed numbers into panel.yaml and (re)render the SVGs.
 
-Shared by cli/fetch_stats.py (manual `make stats`) and today.py (CI): both
+Shared by cli/fetch_stats.py (manual) and today.py (CI / make setup): both
 collect the same GitHub numbers, then call :func:`set_values` so panel.yaml
 stays the single source of truth for what the SVGs show, and :func:`render` to
 rebuild both themes from it.
@@ -81,5 +81,5 @@ def set_values(mapping, path=PANEL_YAML):
 
 
 def render():
-    """Rebuild dark_mode.svg / light_mode.svg from panel.yaml."""
-    subprocess.run([sys.executable, os.path.join(HERE, 'panel_to_svg.py')], check=True)
+    """Recreate dark_mode.svg / light_mode.svg from scratch (panel.yaml + *_mode.txt)."""
+    subprocess.run([sys.executable, os.path.join(HERE, 'build_svg.py')], check=True)
