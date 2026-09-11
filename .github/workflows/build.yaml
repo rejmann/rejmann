@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # necessário para o git push do README atualizado
     timeout-minutes: 10 # cancela o job (falho) se passar disso, em vez de deixar rodando; um rescan completo do LOC (sem cache) leva ~3 min
     steps:
       - name: Checkout repository
