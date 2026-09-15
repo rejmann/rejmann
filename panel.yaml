@@ -53,7 +53,7 @@ sections:
   - title: null                 # a primeira seção não tem cabeçalho
     rows:
       - { key: "OS",     value: "Windows 11, Android 16, Linux" }
-      - { key: "Uptime", value: "28 years, 0 months, 24 days", id: age_data }
+      - { key: "Uptime", value: "28 years, 0 months, 25 days", id: age_data }
       - { key: "Host",   value: "Codarme Sistemas, Ltda" }
       - { key: "Kernel", value: "Developer" }
       - { key: "IDE",    value: "VSCode" }
