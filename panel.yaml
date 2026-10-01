@@ -53,7 +53,7 @@ sections:
   - title: null                 # a primeira seção não tem cabeçalho
     rows:
       - { key: "OS",     value: "Windows 11, Android 16, Linux" }
-      - { key: "Uptime", value: "28 years, 1 month, 9 days", id: age_data }
+      - { key: "Uptime", value: "28 years, 1 month, 10 days", id: age_data }
       - { key: "Host",   value: "Codarme Sistemas, Ltda" }
       - { key: "Kernel", value: "Developer" }
       - { key: "IDE",    value: "VSCode" }
@@ -73,7 +73,7 @@ sections:
     fields:                       # contrato com o today.py — mexa só se ele mudar
       repo_data:     { value: "31" }
       contrib_data:  { value: "54" }
-      star_data:     { value: "4" }
+      star_data:     { value: "5" }
       commit_data:   { value: "5,051" }
       follower_data: { value: "23" }
       loc_data:      { value: "3,887,509" }
