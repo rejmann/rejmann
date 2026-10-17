@@ -53,7 +53,7 @@ sections:
   - title: null                 # a primeira seção não tem cabeçalho
     rows:
       - { key: "OS",     value: "Windows 11, Android 16, Linux" }
-      - { key: "Uptime", value: "28 years, 1 month, 25 days", id: age_data }
+      - { key: "Uptime", value: "28 years, 1 month, 26 days", id: age_data }
       - { key: "Host",   value: "Codarme Sistemas, Ltda" }
       - { key: "Kernel", value: "Developer" }
       - { key: "IDE",    value: "VSCode" }
@@ -71,14 +71,14 @@ sections:
 
   - title: "GitHub Stats"
     fields:                       # contrato com o today.py — mexa só se ele mudar
-      repo_data:     { value: "33" }
-      contrib_data:  { value: "56" }
+      repo_data:     { value: "34" }
+      contrib_data:  { value: "57" }
       star_data:     { value: "6" }
-      commit_data:   { value: "5,105" }
+      commit_data:   { value: "5,147" }
       follower_data: { value: "23" }
-      loc_data:      { value: "3,907,080" }
-      loc_add:       { value: "10,070,624", class: addColor, prefix: "++" }
-      loc_del:       { value: "6,163,544", class: delColor, prefix: "--" }
+      loc_data:      { value: "3,994,680" }
+      loc_add:       { value: "10,160,552", class: addColor, prefix: "++" }
+      loc_del:       { value: "6,165,872", class: delColor, prefix: "--" }
     rows:
       - "{Repos:repo_data}"
       - "{Contributed:contrib_data}"
