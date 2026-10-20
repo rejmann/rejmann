@@ -53,7 +53,7 @@ sections:
   - title: null                 # a primeira seção não tem cabeçalho
     rows:
       - { key: "OS",     value: "Windows 11, Android 16, Linux" }
-      - { key: "Uptime", value: "28 years, 1 month, 28 days", id: age_data }
+      - { key: "Uptime", value: "28 years, 1 month, 29 days", id: age_data }
       - { key: "Host",   value: "Codarme Sistemas, Ltda" }
       - { key: "Kernel", value: "Developer" }
       - { key: "IDE",    value: "VSCode" }
@@ -74,11 +74,11 @@ sections:
       repo_data:     { value: "34" }
       contrib_data:  { value: "57" }
       star_data:     { value: "6" }
-      commit_data:   { value: "5,204" }
+      commit_data:   { value: "5,251" }
       follower_data: { value: "23" }
-      loc_data:      { value: "4,007,791" }
-      loc_add:       { value: "10,202,156", class: addColor, prefix: "++" }
-      loc_del:       { value: "6,194,365", class: delColor, prefix: "--" }
+      loc_data:      { value: "4,031,660" }
+      loc_add:       { value: "10,283,151", class: addColor, prefix: "++" }
+      loc_del:       { value: "6,251,491", class: delColor, prefix: "--" }
     rows:
       - "{Repos:repo_data}"
       - "{Contributed:contrib_data}"
